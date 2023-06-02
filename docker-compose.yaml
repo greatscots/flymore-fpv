@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db:
+    image: postgis/postgis:latest
+    environment:
+      POSTGRES_USER: your_postgres_user
+      POSTGRES_PASSWORD: your_postgres_password
+      POSTGRES_DB: your_postgres_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    command: npm start
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://your_postgres_user:your_postgres_password@db:5432/your_postgres_db
+
+volumes:
+  postgres_data:
